@@ -21,9 +21,9 @@ import os
 
 from PIL import Image
 from numpy import zeros, uint8, uint32
-from cStringIO import StringIO
+from io import StringIO
 # ============= local library imports  ==========================
-from core import lib, TOUPCAM_EVENT_IMAGE, TOUPCAM_EVENT_STILLIMAGE, success, HToupCam
+from .core import lib, TOUPCAM_EVENT_IMAGE, TOUPCAM_EVENT_STILLIMAGE, success, HToupCam
 
 
 class ToupCamCamera(object):
@@ -39,7 +39,7 @@ class ToupCamCamera(object):
         if resolution is None and size is None:
             resolution = 2
 
-        if bits not in (32,):
+        if bits not in {8, 32}:
             raise ValueError('Bits needs to by 8 or 32')
 
         if size is None:
@@ -94,7 +94,7 @@ class ToupCamCamera(object):
             lib.Toupcam_Close(self.cam)
 
     def open(self):
-        if self.resolution:
+        if self.resolution is not None:
             self.set_esize(self.resolution)
         else:
             self.set_size(*self.size)
@@ -200,7 +200,8 @@ class ToupCamCamera(object):
 
         def temptint_cb(temp, tint):
             if callback:
-                callback((temp, tint))
+                pass
+                # callback((temp, tint))
 
         callback = ctypes.CFUNCTYPE(None, ctypes.c_uint, ctypes.c_void_p)
         self._temptint_cb = callback(temptint_cb)

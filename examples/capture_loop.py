@@ -31,7 +31,7 @@ def main():
     # every t seconds
     t = 2
 
-    for i in xrange(n):
+    for i in range(n):
         path = 'test_image-{:02d}.jpg'.format(i)
         cam.save(path)
         time.sleep(t)
